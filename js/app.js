@@ -4,7 +4,7 @@ let centerImageElement = document.getElementById('center-image');
 let rightImageElement = document.getElementById('right-image');
 
 let button = document.getElementById('but-result');
-button.style.marginLeft = "47%";
+// button.style.marginLeft = "47%";
 
 
 let maxAttempts = 25;
@@ -17,7 +17,7 @@ let rightImageIndex;
 
 
 
-let previousindex = [];
+// let previousindex = [];
 
 
 let namesArr = [];
@@ -26,19 +26,32 @@ let votesArr = [];
 
 let shownArr = [];
 
+
+
+
 // Pascal
 function Commodity(name, src) {
     this.name = name;
     this.source = src;
     this.votes = 0;
     this.show = 0;
+
     Commodity.all.push(this);
-    previousindex.push(this);
+    
+    // previousindex.push(this);
+
+
+    // Commodity.voteofArray.push(this)
+    
 
     // namesArr.push(this.name);
     // votesArr.push(this.votes)
 
 }
+
+// Commodity.voteofArray = [];
+
+
 
 Commodity.all = [];
 
@@ -70,9 +83,55 @@ function getRandomIndex() {
 
 
 
+
+
+
+
+
+function votestorge() {
+    
+    
+    let stringArr = JSON.stringify(Commodity.all);
+    // console.log(stringArr);
+    localStorage.setItem('votes', stringArr);
+    // console.log(stringArr);
+
+}
+
+
+
+function getvotestorge() {
+    // get data from local storage
+    let data =localStorage.getItem('votes');
+    // console.log(data);
+  
+    // convert the string array into a normal one:
+   
+    // console.log(arrayparsed);
+
+if (data != null) {
+    let arrayparsed=JSON.parse(data)
+    Commodity.all=arrayparsed;
+
+}
+
+   
+    
+  }
+
+
+
+
+
+//   votestorge();
+
+//   getvotestorge()
+
+let previousindex=[];
+
 function renderthreeImages() {
 
-    previousindex = [leftImageIndex, rightImageIndex, centerImageIndex];
+   previousindex = [leftImageIndex, rightImageIndex, centerImageIndex];
 
     // console.log(previousindex);
 
@@ -83,14 +142,16 @@ function renderthreeImages() {
     centerImageIndex = getRandomIndex();
 
 
+    while (leftImageIndex === rightImageIndex || centerImageIndex === rightImageIndex || centerImageIndex === leftImageIndex
+        || previousindex.includes(rightImageIndex) || previousindex.includes(leftImageIndex)
+        || previousindex.includes(centerImageIndex)) {
 
-    while (leftImageIndex === rightImageIndex || centerImageIndex === rightImageIndex || centerImageIndex === leftImageIndex || previousindex.includes(rightImageIndex) || previousindex.includes(leftImageIndex) || previousindex.includes(centerImageIndex)) {
         rightImageIndex = getRandomIndex();
         centerImageIndex = getRandomIndex();
         leftImageIndex = getRandomIndex();
 
     }
-    console.log(previousindex);
+    // console.log(previousindex);
 
 
     leftImageElement.src = Commodity.all[leftImageIndex].source;
@@ -100,22 +161,25 @@ function renderthreeImages() {
     rightImageElement.src = Commodity.all[rightImageIndex].source;
 
 
-
-
     Commodity.all[leftImageIndex].show++;
     Commodity.all[centerImageIndex].show++;
     Commodity.all[rightImageIndex].show++;
 
 
-
-
-
-
+    
 }
 
 
 
 renderthreeImages();
+
+
+
+
+
+
+// localStorage.setItem('votes', 'shownArr');
+// console.log(localStorage);
 
 
 
@@ -132,24 +196,25 @@ function UserClick(event) {
         if (event.target.id === 'left-image') {
 
             Commodity.all[leftImageIndex].votes++;
-            console.log(Commodity.all[leftImageIndex]);
+            // console.log(Commodity.all[leftImageIndex]);
 
         }
         else if (event.target.id === 'center-image') {
             Commodity.all[centerImageIndex].votes++;
-            console.log(Commodity.all[centerImageIndex]);
+            // console.log(Commodity.all[centerImageIndex]);
         }
         else if (event.target.id === 'left-image') {
             Commodity.all[leftImageIndex].votes++;
-            console.log(Commodity.all[centerImageIndex]);
+            // console.log(Commodity.all[centerImageIndex]);
         }
 
         else {
             Commodity.all[rightImageIndex].votes++;
-            console.log(Commodity.all[rightImageIndex]);
+            // console.log(Commodity.all[rightImageIndex]);
         }
 
 
+        votestorge();
 
 
 
@@ -159,10 +224,11 @@ function UserClick(event) {
     }
 
     else {
+
         imagesdiv.removeEventListener('click', UserClick)
 
         button.addEventListener('click', buttonClick);
-        console.log(Commodity);
+        // console.log(Commodity);
         for (let i = 0; i < Commodity.all.length; i++) {
             namesArr.push(Commodity.all[i].name);
             votesArr.push(Commodity.all[i].votes);
@@ -178,11 +244,13 @@ function UserClick(event) {
 
 
 
-
-
-
 function buttonClick() {
-    showChart()
+    
+   
+    
+    
+    
+
     let list = document.getElementById('results-list');
     let li = document.createElement('li')
     for (let i = 0; i < Commodity.all.length; i++) {
@@ -197,16 +265,8 @@ function buttonClick() {
 
     button.removeEventListener('click', buttonClick)
 
-
+    showChart()
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -283,3 +343,7 @@ function showChart() {
     );
 
 }
+
+
+getvotestorge()
+
